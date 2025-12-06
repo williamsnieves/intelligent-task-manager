@@ -38,7 +38,7 @@ export class TasksService {
   }
 
   async findOne(userId: string, taskId: string): Promise<Task> {
-    const task = await this.taskModel.findOne({ _id: taskId, userId }).populate('labels').exec();
+    const task = await this.taskModel.findOne({ _id: taskId, userId: userId } as any).populate('labels').exec();
     if (!task) {
       throw new NotFoundException('Task not found or access denied');
     }
@@ -52,7 +52,7 @@ export class TasksService {
       }
 
     const task = await this.taskModel.findOneAndUpdate(
-      { _id: taskId, userId },
+      { _id: taskId, userId: userId } as any,
       updateTaskDto,
       { new: true },
     ).populate('labels').exec();
@@ -64,13 +64,13 @@ export class TasksService {
   }
 
   async remove(userId: string, taskId: string): Promise<void> {
-    const result = await this.taskModel.deleteOne({ _id: taskId, userId }).exec();
+    const result = await this.taskModel.deleteOne({ _id: taskId, userId: userId } as any).exec();
     if (result.deletedCount === 0) {
       throw new NotFoundException('Task not found or access denied');
     }
   }
 
   async removeByProjectId(userId: string, projectId: string): Promise<void> {
-    await this.taskModel.deleteMany({ projectId, userId }).exec();
+    await this.taskModel.deleteMany({ projectId: projectId, userId: userId } as any).exec();
   }
 }
