@@ -1,14 +1,14 @@
-import api from '../../../lib/axios';
-import type { Project, CreateProjectDto, UpdateProjectDto } from '../types';
+import api from "../../../lib/axios";
+import type { Project, CreateProjectDto, UpdateProjectDto } from "../types";
 
 export const projectsService = {
   findAll: async (): Promise<Project[]> => {
-    const response = await api.get<Project[]>('/projects');
+    const response = await api.get<Project[]>("/projects");
     return response.data;
   },
 
   create: async (data: CreateProjectDto): Promise<Project> => {
-    const response = await api.post<Project>('/projects', data);
+    const response = await api.post<Project>("/projects", data);
     return response.data;
   },
 
@@ -21,4 +21,3 @@ export const projectsService = {
     await api.delete(`/projects/${id}`);
   },
 };
-

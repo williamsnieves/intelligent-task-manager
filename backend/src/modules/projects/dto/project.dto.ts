@@ -21,4 +21,3 @@ export class UpdateProjectDto {
   @IsHexColor()
   color?: string;
 }
-

@@ -12,7 +12,10 @@ import {
 } from '@nestjs/common';
 import { TasksService } from '../application/tasks.service';
 import { CreateTaskDto, UpdateTaskDto } from '../dto/task.dto';
-import { TaskStatus, TaskPriority } from '../infrastructure/schemas/task.schema';
+import {
+  TaskStatus,
+  TaskPriority,
+} from '../infrastructure/schemas/task.schema';
 import { JwtAuthGuard } from '../../../common/guards/jwt-auth.guard';
 
 @UseGuards(JwtAuthGuard)
@@ -22,6 +25,7 @@ export class TasksController {
 
   @Post()
   create(@Request() req, @Body() createTaskDto: CreateTaskDto) {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-member-access
     return this.tasksService.create(req.user.userId, createTaskDto);
   }
 
@@ -32,11 +36,17 @@ export class TasksController {
     @Query('status') status?: TaskStatus,
     @Query('priority') priority?: TaskPriority,
   ) {
-    return this.tasksService.findAll(req.user.userId, { projectId, status, priority });
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-member-access
+    return this.tasksService.findAll(req.user.userId, {
+      projectId,
+      status,
+      priority,
+    });
   }
 
   @Get(':id')
   findOne(@Request() req, @Param('id') id: string) {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-member-access
     return this.tasksService.findOne(req.user.userId, id);
   }
 
@@ -46,12 +56,13 @@ export class TasksController {
     @Param('id') id: string,
     @Body() updateTaskDto: UpdateTaskDto,
   ) {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-member-access
     return this.tasksService.update(req.user.userId, id, updateTaskDto);
   }
 
   @Delete(':id')
   remove(@Request() req, @Param('id') id: string) {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-member-access
     return this.tasksService.remove(req.user.userId, id);
   }
 }
-

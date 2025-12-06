@@ -1,5 +1,16 @@
-import { IsDateString, IsEnum, IsMongoId, IsNotEmpty, IsOptional, IsString, IsArray } from 'class-validator';
-import { TaskPriority, TaskStatus } from '../infrastructure/schemas/task.schema';
+import {
+  IsDateString,
+  IsEnum,
+  IsMongoId,
+  IsNotEmpty,
+  IsOptional,
+  IsString,
+  IsArray,
+} from 'class-validator';
+import {
+  TaskPriority,
+  TaskStatus,
+} from '../infrastructure/schemas/task.schema';
 
 export class CreateTaskDto {
   @IsString()
@@ -62,4 +73,3 @@ export class UpdateTaskDto {
   @IsMongoId({ each: true })
   labels?: string[];
 }
-

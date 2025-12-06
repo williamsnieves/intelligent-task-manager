@@ -17,4 +17,3 @@ export class Label {
 }
 
 export const LabelSchema = SchemaFactory.createForClass(Label);
-

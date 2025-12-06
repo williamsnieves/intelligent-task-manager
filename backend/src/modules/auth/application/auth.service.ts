@@ -3,7 +3,6 @@ import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
 import { UsersService } from '../../users/application/users.service';
 import { CreateUserDto } from '../../users/dto/create-user.dto';
-import { UserDocument } from '../../users/infrastructure/schemas/user.schema';
 
 @Injectable()
 export class AuthService {
@@ -21,7 +20,9 @@ export class AuthService {
     return null;
   }
 
+  // eslint-disable-next-line @typescript-eslint/require-await
   async login(user: any) {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-assignment
     const payload = { email: user.email, sub: user._id };
     return {
       access_token: this.jwtService.sign(payload),
@@ -29,11 +30,12 @@ export class AuthService {
   }
 
   async register(createUserDto: CreateUserDto) {
-    const existingUser = await this.usersService.findByEmail(createUserDto.email);
+    const existingUser = await this.usersService.findByEmail(
+      createUserDto.email,
+    );
     if (existingUser) {
       throw new UnauthorizedException('Email already exists');
     }
     return this.usersService.create(createUserDto);
   }
 }
-

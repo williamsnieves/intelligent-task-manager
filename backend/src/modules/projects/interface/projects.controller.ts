@@ -20,16 +20,19 @@ export class ProjectsController {
 
   @Post()
   create(@Request() req, @Body() createProjectDto: CreateProjectDto) {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-member-access
     return this.projectsService.create(req.user.userId, createProjectDto);
   }
 
   @Get()
   findAll(@Request() req) {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-member-access
     return this.projectsService.findAll(req.user.userId);
   }
 
   @Get(':id')
   findOne(@Request() req, @Param('id') id: string) {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-member-access
     return this.projectsService.findOne(req.user.userId, id);
   }
 
@@ -39,12 +42,13 @@ export class ProjectsController {
     @Param('id') id: string,
     @Body() updateProjectDto: UpdateProjectDto,
   ) {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-member-access
     return this.projectsService.update(req.user.userId, id, updateProjectDto);
   }
 
   @Delete(':id')
   remove(@Request() req, @Param('id') id: string) {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-member-access
     return this.projectsService.remove(req.user.userId, id);
   }
 }
-

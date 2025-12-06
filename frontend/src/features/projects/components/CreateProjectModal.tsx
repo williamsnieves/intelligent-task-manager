@@ -1,23 +1,26 @@
-import React, { useState } from 'react';
-import { useProjectStore } from '../store/projectStore';
+import React, { useState } from "react";
+import { useProjectStore } from "../store/projectStore";
 
 interface CreateProjectModalProps {
   isOpen: boolean;
   onClose: () => void;
 }
 
-export const CreateProjectModal: React.FC<CreateProjectModalProps> = ({ isOpen, onClose }) => {
+export const CreateProjectModal: React.FC<CreateProjectModalProps> = ({
+  isOpen,
+  onClose,
+}) => {
   const createProject = useProjectStore((state) => state.createProject);
-  const [name, setName] = useState('');
-  const [color, setColor] = useState('#000000');
+  const [name, setName] = useState("");
+  const [color, setColor] = useState("#000000");
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!name.trim()) return;
-    
+
     await createProject({ name, color });
-    setName('');
-    setColor('#000000');
+    setName("");
+    setColor("#000000");
     onClose();
   };
 
@@ -29,7 +32,9 @@ export const CreateProjectModal: React.FC<CreateProjectModalProps> = ({ isOpen, 
         <h2 className="text-xl font-bold mb-4">New Project</h2>
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
-            <label className="block text-sm font-medium text-gray-700">Project Name</label>
+            <label className="block text-sm font-medium text-gray-700">
+              Project Name
+            </label>
             <input
               type="text"
               required
@@ -40,7 +45,9 @@ export const CreateProjectModal: React.FC<CreateProjectModalProps> = ({ isOpen, 
             />
           </div>
           <div>
-            <label className="block text-sm font-medium text-gray-700">Color</label>
+            <label className="block text-sm font-medium text-gray-700">
+              Color
+            </label>
             <div className="flex items-center space-x-2 mt-1">
               <input
                 type="color"
@@ -71,4 +78,3 @@ export const CreateProjectModal: React.FC<CreateProjectModalProps> = ({ isOpen, 
     </div>
   );
 };
-

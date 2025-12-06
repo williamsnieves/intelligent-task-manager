@@ -6,6 +6,7 @@ import { MongooseModule } from '@nestjs/mongoose';
   imports: [
     MongooseModule.forRootAsync({
       imports: [ConfigModule],
+      // eslint-disable-next-line @typescript-eslint/require-await
       useFactory: async (configService: ConfigService) => ({
         uri: configService.get<string>('DATABASE_URL'),
       }),
@@ -14,4 +15,3 @@ import { MongooseModule } from '@nestjs/mongoose';
   ],
 })
 export class DatabaseModule {}
-

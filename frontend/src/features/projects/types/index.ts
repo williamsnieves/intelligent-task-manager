@@ -16,4 +16,3 @@ export interface UpdateProjectDto {
   name?: string;
   color?: string;
 }
-

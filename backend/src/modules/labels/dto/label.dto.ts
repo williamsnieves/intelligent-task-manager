@@ -21,4 +21,3 @@ export class UpdateLabelDto {
   @IsHexColor()
   color?: string;
 }
-
