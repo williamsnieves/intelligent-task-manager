@@ -19,6 +19,10 @@ export class CreateTaskDto {
   dueDate?: Date;
 
   @IsOptional()
+  @IsEnum(TaskStatus)
+  status?: TaskStatus;
+
+  @IsOptional()
   @IsMongoId()
   projectId?: string;
 

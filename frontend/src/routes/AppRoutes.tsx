@@ -5,9 +5,7 @@ import DashboardLayout from '../layout/DashboardLayout';
 import { LoginForm } from '../features/auth/components/LoginForm';
 import { RegisterForm } from '../features/auth/components/RegisterForm';
 import { ProtectedRoute } from '../features/auth/components/ProtectedRoute';
-
-// Placeholder for TaskDashboard
-const TaskDashboard = () => <div>Task Dashboard Placeholder</div>;
+import { TaskList } from '../features/tasks/components/TaskList';
 
 const AppRoutes: React.FC = () => {
   return (
@@ -20,7 +18,7 @@ const AppRoutes: React.FC = () => {
         {/* Protected Dashboard Routes */}
         <Route element={<ProtectedRoute />}>
           <Route path="/dashboard" element={<DashboardLayout />}>
-            <Route index element={<TaskDashboard />} />
+            <Route index element={<TaskList />} />
             {/* More nested routes will go here */}
           </Route>
         </Route>
