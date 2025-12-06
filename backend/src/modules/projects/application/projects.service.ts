@@ -21,11 +21,11 @@ export class ProjectsService {
   }
 
   async findAll(userId: string): Promise<Project[]> {
-    return this.projectModel.find({ userId }).exec();
+    return this.projectModel.find({ userId: userId } as any).exec();
   }
 
   async findOne(userId: string, projectId: string): Promise<Project> {
-    const project = await this.projectModel.findOne({ _id: projectId, userId }).exec();
+    const project = await this.projectModel.findOne({ _id: projectId, userId: userId } as any).exec();
     if (!project) {
       throw new NotFoundException('Project not found or access denied');
     }
@@ -34,7 +34,7 @@ export class ProjectsService {
 
   async update(userId: string, projectId: string, updateProjectDto: UpdateProjectDto): Promise<Project> {
     const project = await this.projectModel.findOneAndUpdate(
-      { _id: projectId, userId },
+      { _id: projectId, userId: userId } as any,
       updateProjectDto,
       { new: true },
     ).exec();
@@ -49,7 +49,7 @@ export class ProjectsService {
     const session = await this.projectModel.db.startSession();
     session.startTransaction();
     try {
-        const result = await this.projectModel.deleteOne({ _id: projectId, userId }).session(session).exec();
+        const result = await this.projectModel.deleteOne({ _id: projectId, userId: userId } as any).session(session).exec();
         if (result.deletedCount === 0) {
             throw new NotFoundException('Project not found or access denied');
         }

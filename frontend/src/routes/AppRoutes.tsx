@@ -2,10 +2,11 @@ import React from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import AuthLayout from '../layout/AuthLayout';
 import DashboardLayout from '../layout/DashboardLayout';
+import { LoginForm } from '../features/auth/components/LoginForm';
+import { RegisterForm } from '../features/auth/components/RegisterForm';
+import { ProtectedRoute } from '../features/auth/components/ProtectedRoute';
 
-// Placeholder components for now
-const Login = () => <div>Login Form Placeholder</div>;
-const Register = () => <div>Register Form Placeholder</div>;
+// Placeholder for TaskDashboard
 const TaskDashboard = () => <div>Task Dashboard Placeholder</div>;
 
 const AppRoutes: React.FC = () => {
@@ -13,13 +14,15 @@ const AppRoutes: React.FC = () => {
     <BrowserRouter>
       <Routes>
         {/* Auth Routes */}
-        <Route path="/login" element={<AuthLayout><Login /></AuthLayout>} />
-        <Route path="/register" element={<AuthLayout><Register /></AuthLayout>} />
+        <Route path="/login" element={<AuthLayout><LoginForm /></AuthLayout>} />
+        <Route path="/register" element={<AuthLayout><RegisterForm /></AuthLayout>} />
 
-        {/* Dashboard Routes */}
-        <Route path="/dashboard" element={<DashboardLayout />}>
-          <Route index element={<TaskDashboard />} />
-          {/* More nested routes will go here */}
+        {/* Protected Dashboard Routes */}
+        <Route element={<ProtectedRoute />}>
+          <Route path="/dashboard" element={<DashboardLayout />}>
+            <Route index element={<TaskDashboard />} />
+            {/* More nested routes will go here */}
+          </Route>
         </Route>
 
         {/* Fallback */}
@@ -30,4 +33,3 @@ const AppRoutes: React.FC = () => {
 };
 
 export default AppRoutes;
-
