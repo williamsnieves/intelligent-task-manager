@@ -1,6 +1,7 @@
 import React from 'react';
 import { Outlet, Link, useNavigate } from 'react-router-dom';
 import { useAuthStore } from '../features/auth/store/authStore';
+import { ProjectList } from '../features/projects/components/ProjectList';
 
 const DashboardLayout: React.FC = () => {
   const navigate = useNavigate();
@@ -18,14 +19,11 @@ const DashboardLayout: React.FC = () => {
         <div className="p-6 border-b border-gray-200">
           <h1 className="text-xl font-bold text-blue-600">Task Manager</h1>
         </div>
-        <nav className="flex-1 p-4 space-y-2">
-          <Link to="/dashboard" className="block px-4 py-2 text-gray-700 hover:bg-gray-100 rounded-md">
-            My Tasks
-          </Link>
-          <Link to="/dashboard/projects" className="block px-4 py-2 text-gray-700 hover:bg-gray-100 rounded-md">
-            Projects
-          </Link>
+        
+        <nav className="flex-1 p-4 overflow-y-auto">
+           <ProjectList />
         </nav>
+
         <div className="p-4 border-t border-gray-200">
           <button onClick={handleLogout} className="w-full px-4 py-2 text-sm text-red-600 hover:bg-red-50 rounded-md text-left">
             Logout
@@ -48,4 +46,3 @@ const DashboardLayout: React.FC = () => {
 };
 
 export default DashboardLayout;
-
