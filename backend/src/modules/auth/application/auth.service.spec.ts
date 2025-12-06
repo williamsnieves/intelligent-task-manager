@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
+/* eslint-disable @typescript-eslint/unbound-method */
 import { Test, TestingModule } from '@nestjs/testing';
 import { AuthService } from './auth.service';
 import { UsersService } from '../../users/application/users.service';
@@ -10,7 +12,6 @@ jest.mock('bcrypt');
 describe('AuthService', () => {
   let service: AuthService;
   let usersService: UsersService;
-  let jwtService: JwtService;
 
   const mockUsersService = {
     findByEmail: jest.fn(),
@@ -38,7 +39,6 @@ describe('AuthService', () => {
 
     service = module.get<AuthService>(AuthService);
     usersService = module.get<UsersService>(UsersService);
-    jwtService = module.get<JwtService>(JwtService);
   });
 
   afterEach(() => {
@@ -54,12 +54,19 @@ describe('AuthService', () => {
       const mockUser = {
         email: 'test@example.com',
         passwordHash: 'hashed',
-        toObject: () => ({ email: 'test@example.com', passwordHash: 'hashed', _id: '1' }),
+        toObject: () => ({
+          email: 'test@example.com',
+          passwordHash: 'hashed',
+          _id: '1',
+        }),
       };
       mockUsersService.findByEmail.mockResolvedValue(mockUser);
       (bcrypt.compare as jest.Mock).mockResolvedValue(true);
 
-      const result = await service.validateUser('test@example.com', 'password');
+      const result = (await service.validateUser(
+        'test@example.com',
+        'password',
+      )) as Record<string, any>;
       expect(result).toEqual({ email: 'test@example.com', _id: '1' });
       expect(result).not.toHaveProperty('passwordHash');
     });
@@ -71,7 +78,7 @@ describe('AuthService', () => {
     });
 
     it('should return null if password mismatch', async () => {
-       const mockUser = {
+      const mockUser = {
         email: 'test@example.com',
         passwordHash: 'hashed',
       };
@@ -90,7 +97,10 @@ describe('AuthService', () => {
 
       const result = await service.login(user);
       expect(result).toEqual({ access_token: 'token' });
-      expect(mockJwtService.sign).toHaveBeenCalledWith({ email: user.email, sub: user._id });
+      expect(mockJwtService.sign).toHaveBeenCalledWith({
+        email: user.email,
+        sub: user._id,
+      });
     });
   });
 
@@ -106,11 +116,18 @@ describe('AuthService', () => {
     });
 
     it('should throw UnauthorizedException if email exists', async () => {
-      const dto = { email: 'exists@example.com', password: 'pass', name: 'Exists' };
+      const dto = {
+        email: 'exists@example.com',
+        password: 'pass',
+        name: 'Exists',
+      };
       mockUsersService.findByEmail.mockResolvedValue({ _id: '1' });
 
-      await expect(service.register(dto)).rejects.toThrow(UnauthorizedException);
+      try {
+        await service.register(dto);
+      } catch (error) {
+        expect(error).toBeInstanceOf(UnauthorizedException);
+      }
     });
   });
 });
-

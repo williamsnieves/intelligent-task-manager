@@ -44,7 +44,6 @@ export class TasksService {
       priority?: TaskPriority;
     },
   ): Promise<Task[]> {
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
     const query: any = { userId };
     if (filters.projectId) {
       // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access

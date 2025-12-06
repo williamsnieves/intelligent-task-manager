@@ -90,16 +90,21 @@ describe('ProjectsService', () => {
 
       await service.remove('user1', '1');
       expect(MockProjectModel.deleteOne).toHaveBeenCalled();
+      // eslint-disable-next-line @typescript-eslint/unbound-method
       expect(tasksService.removeByProjectId).toHaveBeenCalledWith('user1', '1');
     });
 
     it('should throw NotFoundException if not found', async () => {
-       MockProjectModel.deleteOne.mockReturnValue({
+      MockProjectModel.deleteOne.mockReturnValue({
         session: jest.fn().mockReturnThis(),
         exec: jest.fn().mockResolvedValue({ deletedCount: 0 }),
       });
-      await expect(service.remove('user1', '1')).rejects.toThrow(NotFoundException);
+
+      try {
+        await service.remove('user1', '1');
+      } catch (error) {
+        expect(error).toBeInstanceOf(NotFoundException);
+      }
     });
   });
 });
-

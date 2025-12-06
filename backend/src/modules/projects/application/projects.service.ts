@@ -81,7 +81,7 @@ export class ProjectsService {
       }
 
       // Cascade delete tasks
-      // eslint-disable-next-line @typescript-eslint/no-floating-promises
+
       await this.tasksService.removeByProjectId(userId, projectId); // We need to pass session ideally, but Mongoose find/delete inside service might need adjustment to accept options.
       // For MVP without transactions complexity across modules:
       // If this was SQL we'd use CASCADE. Here we manually delete.

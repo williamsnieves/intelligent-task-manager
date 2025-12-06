@@ -1,9 +1,8 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { TasksService } from './tasks.service';
 import { getModelToken } from '@nestjs/mongoose';
-import { Task, TaskStatus, TaskPriority } from '../infrastructure/schemas/task.schema';
+import { Task, TaskStatus } from '../infrastructure/schemas/task.schema';
 import { ProjectsService } from '../../projects/application/projects.service';
-import { NotFoundException } from '@nestjs/common';
 
 describe('TasksService', () => {
   let service: TasksService;
@@ -56,33 +55,41 @@ describe('TasksService', () => {
   describe('create', () => {
     it('should create a task without project', async () => {
       const dto = { title: 'Test Task', status: TaskStatus.TODO };
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
       const result = await service.create('user1', dto as any);
       expect(result).toHaveProperty('title', 'Test Task');
     });
 
     it('should validate project ownership if projectId provided', async () => {
-      const dto = { title: 'Test Task', projectId: 'p1', status: TaskStatus.TODO };
+      const dto = {
+        title: 'Test Task',
+        projectId: 'p1',
+        status: TaskStatus.TODO,
+      };
       mockProjectsService.findOne.mockResolvedValue({ _id: 'p1' });
-      
+
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
       await service.create('user1', dto as any);
+      // eslint-disable-next-line @typescript-eslint/unbound-method
       expect(projectsService.findOne).toHaveBeenCalledWith('user1', 'p1');
     });
   });
-  
-  describe('findAll', () => {
-      it('should apply filters', async () => {
-          const mockTask = { _id: '1' };
-          MockTaskModel.find.mockReturnValue({
-              populate: jest.fn().mockReturnThis(),
-              exec: jest.fn().mockResolvedValue([mockTask])
-          });
 
-          await service.findAll('user1', { status: TaskStatus.IN_PROGRESS });
-          expect(MockTaskModel.find).toHaveBeenCalledWith(expect.objectContaining({ 
-              userId: 'user1',
-              status: TaskStatus.IN_PROGRESS 
-          }));
+  describe('findAll', () => {
+    it('should apply filters', async () => {
+      const mockTask = { _id: '1' };
+      MockTaskModel.find.mockReturnValue({
+        populate: jest.fn().mockReturnThis(),
+        exec: jest.fn().mockResolvedValue([mockTask]),
       });
+
+      await service.findAll('user1', { status: TaskStatus.IN_PROGRESS });
+      expect(MockTaskModel.find).toHaveBeenCalledWith(
+        expect.objectContaining({
+          userId: 'user1',
+          status: TaskStatus.IN_PROGRESS,
+        }),
+      );
+    });
   });
 });
-
