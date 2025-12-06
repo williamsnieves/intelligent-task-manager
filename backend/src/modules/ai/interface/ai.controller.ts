@@ -17,7 +17,7 @@ export class AiController {
       analyzeTaskDto.description,
       analyzeTaskDto.currentTitle,
     );
-    
+
     return {
       priority: result.priority,
       dueDate: result.dueDate,
@@ -32,4 +32,3 @@ export class AiController {
     return this.aiService.checkHealth();
   }
 }
-

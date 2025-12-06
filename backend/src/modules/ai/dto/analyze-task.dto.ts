@@ -11,4 +11,3 @@ export class AnalyzeTaskDto {
   @MaxLength(200, { message: 'Task title is too long' })
   currentTitle?: string;
 }
-

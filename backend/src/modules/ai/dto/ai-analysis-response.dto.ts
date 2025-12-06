@@ -17,4 +17,3 @@ export class AiAnalysisResponseDto {
   titleSuggestions?: TitleSuggestionDto[];
   descriptionSuggestions?: DescriptionSuggestionDto[];
 }
-

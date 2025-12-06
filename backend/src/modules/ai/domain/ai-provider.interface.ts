@@ -25,7 +25,10 @@ export interface IAiProvider {
    * @param currentTitle - Optional current title for context
    * @returns Promise with AI analysis result
    */
-  analyzeTask(description: string, currentTitle?: string): Promise<IAiAnalysisResult>;
+  analyzeTask(
+    description: string,
+    currentTitle?: string,
+  ): Promise<IAiAnalysisResult>;
 
   /**
    * Checks if the AI provider is available/healthy
@@ -33,4 +36,3 @@ export interface IAiProvider {
    */
   isAvailable(): Promise<boolean>;
 }
-

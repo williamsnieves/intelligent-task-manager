@@ -1,4 +1,4 @@
-import { TaskPriority } from '../../tasks/types/task.types';
+import { TaskPriority } from '../../tasks/types';
 
 export interface TitleSuggestion {
   title: string;

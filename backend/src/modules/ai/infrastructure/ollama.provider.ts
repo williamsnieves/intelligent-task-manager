@@ -21,13 +21,15 @@ export class OllamaProvider implements IAiProvider {
 
   constructor(private readonly configService: ConfigService) {
     this.ollamaHost =
-      this.configService.get<string>('OLLAMA_HOST') ||
-      'http://localhost:11434';
+      this.configService.get<string>('OLLAMA_HOST') || 'http://localhost:11434';
     this.ollamaModel =
       this.configService.get<string>('OLLAMA_MODEL') || 'mistral';
   }
 
-  async analyzeTask(description: string, currentTitle?: string): Promise<IAiAnalysisResult> {
+  async analyzeTask(
+    description: string,
+    currentTitle?: string,
+  ): Promise<IAiAnalysisResult> {
     try {
       const prompt = this.buildPrompt(description, currentTitle);
       const response = await this.callOllama(prompt);
@@ -50,11 +52,11 @@ export class OllamaProvider implements IAiProvider {
 
   private buildPrompt(description: string, currentTitle?: string): string {
     const today = new Date().toISOString().split('T')[0]; // YYYY-MM-DD
-    
-    const titleContext = currentTitle 
-      ? `Current title: "${currentTitle}"\n` 
+
+    const titleContext = currentTitle
+      ? `Current title: "${currentTitle}"\n`
       : '';
-    
+
     return `You are a multilingual task management AI assistant. Today's date is ${today}.
 
 ${titleContext}Task description: "${description}"
@@ -139,7 +141,10 @@ Format:
         dueDate?: string;
         reasoning?: string;
         titleSuggestions?: Array<{ title: string; reasoning: string }>;
-        descriptionSuggestions?: Array<{ description: string; reasoning: string }>;
+        descriptionSuggestions?: Array<{
+          description: string;
+          reasoning: string;
+        }>;
       };
 
       // Validate and normalize priority
@@ -173,4 +178,3 @@ Format:
     return TaskPriority.MEDIUM;
   }
 }
-

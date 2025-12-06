@@ -1,5 +1,8 @@
 import { Injectable, Logger } from '@nestjs/common';
-import { IAiProvider, IAiAnalysisResult } from '../domain/ai-provider.interface';
+import {
+  IAiProvider,
+  IAiAnalysisResult,
+} from '../domain/ai-provider.interface';
 import { OllamaProvider } from '../infrastructure/ollama.provider';
 
 @Injectable()
@@ -12,12 +15,17 @@ export class AiService {
     this.logger.log('Using Ollama provider for local open-source LLMs');
   }
 
-  async analyzeTask(description: string, currentTitle?: string): Promise<IAiAnalysisResult> {
+  async analyzeTask(
+    description: string,
+    currentTitle?: string,
+  ): Promise<IAiAnalysisResult> {
     const isAvailable = await this.provider.isAvailable();
-    
+
     if (!isAvailable) {
       this.logger.warn('Ollama is not available');
-      throw new Error('Ollama is not running. Please start Ollama and ensure you have pulled a model (e.g., ollama pull mistral)');
+      throw new Error(
+        'Ollama is not running. Please start Ollama and ensure you have pulled a model (e.g., ollama pull mistral)',
+      );
     }
 
     return this.provider.analyzeTask(description, currentTitle);
@@ -25,11 +33,10 @@ export class AiService {
 
   async checkHealth(): Promise<{ available: boolean; provider: string }> {
     const available = await this.provider.isAvailable();
-    
+
     return {
       available,
       provider: 'ollama',
     };
   }
 }
-

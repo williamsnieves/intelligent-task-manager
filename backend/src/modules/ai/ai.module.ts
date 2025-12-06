@@ -11,4 +11,3 @@ import { OllamaProvider } from './infrastructure/ollama.provider';
   exports: [AiService],
 })
 export class AiModule {}
-
