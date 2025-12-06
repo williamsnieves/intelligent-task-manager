@@ -4,7 +4,7 @@
 Automate the verification process to ensure no broken code is merged. The pipeline will run Lint, Build, and Tests on every Pull Request.
 
 ## Prerequisites
-- [ ] Task 07.2 (Testing) completed.
+- [x] Task 07.2 (Testing) completed.
 
 ## Steps
 
@@ -42,6 +42,6 @@ Create `.github/workflows/ci.yml` with the following jobs:
     - Require branches to be up to date before merging.
 
 ## Deliverables
-- [ ] `.github/workflows/ci.yml` file.
+- [x] `.github/workflows/ci.yml` file.
 - [ ] Successful run of the pipeline on GitHub (screenshot or log).
 
