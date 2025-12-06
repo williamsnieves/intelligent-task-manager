@@ -2,6 +2,9 @@ import React, { useState } from "react";
 import { useTaskStore } from "../store/taskStore";
 import { useProjectStore } from "../../projects/store/projectStore";
 import { TaskPriority, TaskStatus } from "../types";
+import { AiSuggestButton } from "../../ai/components/AiSuggestButton";
+import { AiSuggestions } from "../../ai/components/AiSuggestions";
+import type { AiAnalysisResponse } from "../../ai/types/ai.types";
 
 interface CreateTaskModalProps {
   isOpen: boolean;
@@ -20,6 +23,29 @@ export const CreateTaskModal: React.FC<CreateTaskModalProps> = ({
   const [priority, setPriority] = useState<TaskPriority>(TaskPriority.MEDIUM);
   const [dueDate, setDueDate] = useState("");
   const [projectId, setProjectId] = useState(selectedProjectId || "");
+  
+  // AI Suggestions state
+  const [aiSuggestions, setAiSuggestions] = useState<AiAnalysisResponse | null>(null);
+  const [selectedTitle, setSelectedTitle] = useState<string | null>(null);
+  const [selectedDescription, setSelectedDescription] = useState<string | null>(null);
+
+  const handleAiSuggestion = (suggestion: AiAnalysisResponse) => {
+    setAiSuggestions(suggestion);
+    setPriority(suggestion.priority);
+    if (suggestion.dueDate) {
+      setDueDate(suggestion.dueDate);
+    }
+  };
+
+  const handleSelectTitle = (newTitle: string) => {
+    setSelectedTitle(newTitle);
+    setTitle(newTitle);
+  };
+
+  const handleSelectDescription = (newDescription: string) => {
+    setSelectedDescription(newDescription);
+    setDescription(newDescription);
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -40,6 +66,9 @@ export const CreateTaskModal: React.FC<CreateTaskModalProps> = ({
     setPriority(TaskPriority.MEDIUM);
     setDueDate("");
     setProjectId(selectedProjectId || "");
+    setAiSuggestions(null);
+    setSelectedTitle(null);
+    setSelectedDescription(null);
 
     onClose();
   };
@@ -54,10 +83,13 @@ export const CreateTaskModal: React.FC<CreateTaskModalProps> = ({
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
-      <div className="bg-white rounded-lg p-6 w-full max-w-lg shadow-xl">
-        <h2 className="text-xl font-bold mb-4">New Task</h2>
-        <form onSubmit={handleSubmit} className="space-y-4">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
+      <div className="bg-white rounded-lg w-full max-w-2xl shadow-xl max-h-[90vh] flex flex-col">
+        <div className="p-6 border-b border-gray-200">
+          <h2 className="text-xl font-bold">New Task</h2>
+        </div>
+        <div className="overflow-y-auto flex-1 p-6">
+          <form onSubmit={handleSubmit} className="space-y-4">
           <div>
             <label className="block text-sm font-medium text-gray-700">
               Title
@@ -84,6 +116,28 @@ export const CreateTaskModal: React.FC<CreateTaskModalProps> = ({
               placeholder="Add details..."
             />
           </div>
+
+          {/* AI Suggestion Button */}
+          <div className="border-t border-gray-200 pt-4">
+            <AiSuggestButton
+              description={description}
+              currentTitle={title}
+              onSuggestion={handleAiSuggestion}
+              disabled={!description.trim()}
+            />
+          </div>
+
+          {/* AI Suggestions Display */}
+          {aiSuggestions && (
+            <AiSuggestions
+              titleSuggestions={aiSuggestions.titleSuggestions || []}
+              descriptionSuggestions={aiSuggestions.descriptionSuggestions || []}
+              selectedTitle={selectedTitle}
+              selectedDescription={selectedDescription}
+              onSelectTitle={handleSelectTitle}
+              onSelectDescription={handleSelectDescription}
+            />
+          )}
 
           <div className="grid grid-cols-2 gap-4">
             <div>
@@ -134,7 +188,10 @@ export const CreateTaskModal: React.FC<CreateTaskModalProps> = ({
             </select>
           </div>
 
-          <div className="flex justify-end space-x-3 pt-4">
+          </form>
+        </div>
+        <div className="p-6 border-t border-gray-200 bg-gray-50">
+          <div className="flex justify-end space-x-3">
             <button
               type="button"
               onClick={onClose}
@@ -144,12 +201,13 @@ export const CreateTaskModal: React.FC<CreateTaskModalProps> = ({
             </button>
             <button
               type="submit"
+              onClick={handleSubmit}
               className="px-4 py-2 text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 rounded-md"
             >
               Add Task
             </button>
           </div>
-        </form>
+        </div>
       </div>
     </div>
   );
