@@ -17,4 +17,3 @@ export class Project {
 }
 
 export const ProjectSchema = SchemaFactory.createForClass(Project);
-

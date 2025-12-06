@@ -20,16 +20,19 @@ export class LabelsController {
 
   @Post()
   create(@Request() req, @Body() createLabelDto: CreateLabelDto) {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-member-access
     return this.labelsService.create(req.user.userId, createLabelDto);
   }
 
   @Get()
   findAll(@Request() req) {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-member-access
     return this.labelsService.findAll(req.user.userId);
   }
 
   @Get(':id')
   findOne(@Request() req, @Param('id') id: string) {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-member-access
     return this.labelsService.findOne(req.user.userId, id);
   }
 
@@ -39,12 +42,13 @@ export class LabelsController {
     @Param('id') id: string,
     @Body() updateLabelDto: UpdateLabelDto,
   ) {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-member-access
     return this.labelsService.update(req.user.userId, id, updateLabelDto);
   }
 
   @Delete(':id')
   remove(@Request() req, @Param('id') id: string) {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-member-access
     return this.labelsService.remove(req.user.userId, id);
   }
 }
-

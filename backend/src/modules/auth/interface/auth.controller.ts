@@ -10,6 +10,7 @@ export class AuthController {
   @UseGuards(LocalAuthGuard)
   @Post('login')
   async login(@Request() req) {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
     return this.authService.login(req.user);
   }
 
@@ -18,4 +19,3 @@ export class AuthController {
     return this.authService.register(createUserDto);
   }
 }
-

@@ -1,22 +1,25 @@
-import React, { useState } from 'react';
-import { useTaskStore } from '../store/taskStore';
-import { useProjectStore } from '../../projects/store/projectStore';
-import { TaskPriority, TaskStatus } from '../types';
+import React, { useState } from "react";
+import { useTaskStore } from "../store/taskStore";
+import { useProjectStore } from "../../projects/store/projectStore";
+import { TaskPriority, TaskStatus } from "../types";
 
 interface CreateTaskModalProps {
   isOpen: boolean;
   onClose: () => void;
 }
 
-export const CreateTaskModal: React.FC<CreateTaskModalProps> = ({ isOpen, onClose }) => {
+export const CreateTaskModal: React.FC<CreateTaskModalProps> = ({
+  isOpen,
+  onClose,
+}) => {
   const createTask = useTaskStore((state) => state.createTask);
   const { projects, selectedProjectId } = useProjectStore();
-  
-  const [title, setTitle] = useState('');
-  const [description, setDescription] = useState('');
+
+  const [title, setTitle] = useState("");
+  const [description, setDescription] = useState("");
   const [priority, setPriority] = useState<TaskPriority>(TaskPriority.MEDIUM);
-  const [dueDate, setDueDate] = useState('');
-  const [projectId, setProjectId] = useState(selectedProjectId || '');
+  const [dueDate, setDueDate] = useState("");
+  const [projectId, setProjectId] = useState(selectedProjectId || "");
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -32,19 +35,19 @@ export const CreateTaskModal: React.FC<CreateTaskModalProps> = ({ isOpen, onClos
     });
 
     // Reset form
-    setTitle('');
-    setDescription('');
+    setTitle("");
+    setDescription("");
     setPriority(TaskPriority.MEDIUM);
-    setDueDate('');
-    setProjectId(selectedProjectId || '');
-    
+    setDueDate("");
+    setProjectId(selectedProjectId || "");
+
     onClose();
   };
 
   // Update local projectId when selectedProjectId changes (if modal is closed or just opened)
   React.useEffect(() => {
     if (isOpen && selectedProjectId) {
-        setProjectId(selectedProjectId);
+      setProjectId(selectedProjectId);
     }
   }, [isOpen, selectedProjectId]);
 
@@ -56,7 +59,9 @@ export const CreateTaskModal: React.FC<CreateTaskModalProps> = ({ isOpen, onClos
         <h2 className="text-xl font-bold mb-4">New Task</h2>
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
-            <label className="block text-sm font-medium text-gray-700">Title</label>
+            <label className="block text-sm font-medium text-gray-700">
+              Title
+            </label>
             <input
               type="text"
               required
@@ -66,9 +71,11 @@ export const CreateTaskModal: React.FC<CreateTaskModalProps> = ({ isOpen, onClos
               placeholder="What needs to be done?"
             />
           </div>
-          
+
           <div>
-            <label className="block text-sm font-medium text-gray-700">Description</label>
+            <label className="block text-sm font-medium text-gray-700">
+              Description
+            </label>
             <textarea
               value={description}
               onChange={(e) => setDescription(e.target.value)}
@@ -80,20 +87,26 @@ export const CreateTaskModal: React.FC<CreateTaskModalProps> = ({ isOpen, onClos
 
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <label className="block text-sm font-medium text-gray-700">Priority</label>
+              <label className="block text-sm font-medium text-gray-700">
+                Priority
+              </label>
               <select
                 value={priority}
                 onChange={(e) => setPriority(e.target.value as TaskPriority)}
                 className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
               >
                 {Object.values(TaskPriority).map((p) => (
-                  <option key={p} value={p}>{p}</option>
+                  <option key={p} value={p}>
+                    {p}
+                  </option>
                 ))}
               </select>
             </div>
-            
+
             <div>
-              <label className="block text-sm font-medium text-gray-700">Due Date</label>
+              <label className="block text-sm font-medium text-gray-700">
+                Due Date
+              </label>
               <input
                 type="date"
                 value={dueDate}
@@ -104,7 +117,9 @@ export const CreateTaskModal: React.FC<CreateTaskModalProps> = ({ isOpen, onClos
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700">Project</label>
+            <label className="block text-sm font-medium text-gray-700">
+              Project
+            </label>
             <select
               value={projectId}
               onChange={(e) => setProjectId(e.target.value)}
@@ -139,4 +154,3 @@ export const CreateTaskModal: React.FC<CreateTaskModalProps> = ({ isOpen, onClos
     </div>
   );
 };
-

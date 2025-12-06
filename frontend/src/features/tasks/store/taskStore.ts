@@ -1,6 +1,6 @@
-import { create } from 'zustand';
-import type { Task, CreateTaskDto, UpdateTaskDto } from '../types';
-import { tasksService } from '../services/tasksService';
+import { create } from "zustand";
+import type { Task, CreateTaskDto, UpdateTaskDto } from "../types";
+import { tasksService } from "../services/tasksService";
 
 interface TaskState {
   tasks: Task[];
@@ -24,7 +24,7 @@ export const useTaskStore = create<TaskState>((set) => ({
       const tasks = await tasksService.findAll(projectId);
       set({ tasks, isLoading: false });
     } catch (error) {
-      set({ error: 'Failed to fetch tasks', isLoading: false });
+      set({ error: "Failed to fetch tasks", isLoading: false });
     }
   },
 
@@ -32,12 +32,12 @@ export const useTaskStore = create<TaskState>((set) => ({
     set({ isLoading: true, error: null });
     try {
       const newTask = await tasksService.create(data);
-      set((state) => ({ 
-        tasks: [...state.tasks, newTask], 
-        isLoading: false 
+      set((state) => ({
+        tasks: [...state.tasks, newTask],
+        isLoading: false,
       }));
     } catch (error) {
-      set({ error: 'Failed to create task', isLoading: false });
+      set({ error: "Failed to create task", isLoading: false });
     }
   },
 
@@ -48,7 +48,7 @@ export const useTaskStore = create<TaskState>((set) => ({
         tasks: state.tasks.map((t) => (t._id === id ? updatedTask : t)),
       }));
     } catch (error) {
-      set({ error: 'Failed to update task' });
+      set({ error: "Failed to update task" });
     }
   },
 
@@ -59,8 +59,7 @@ export const useTaskStore = create<TaskState>((set) => ({
         tasks: state.tasks.filter((t) => t._id !== id),
       }));
     } catch (error) {
-      set({ error: 'Failed to delete task' });
+      set({ error: "Failed to delete task" });
     }
   },
 }));
-

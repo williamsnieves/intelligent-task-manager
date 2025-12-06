@@ -1,7 +1,7 @@
-import React from 'react';
-import { Outlet, Link, useNavigate } from 'react-router-dom';
-import { useAuthStore } from '../features/auth/store/authStore';
-import { ProjectList } from '../features/projects/components/ProjectList';
+import React from "react";
+import { Outlet, useNavigate } from "react-router-dom";
+import { useAuthStore } from "../features/auth/store/authStore";
+import { ProjectList } from "../features/projects/components/ProjectList";
 
 const DashboardLayout: React.FC = () => {
   const navigate = useNavigate();
@@ -9,7 +9,7 @@ const DashboardLayout: React.FC = () => {
 
   const handleLogout = () => {
     logout();
-    navigate('/login');
+    navigate("/login");
   };
 
   return (
@@ -19,13 +19,16 @@ const DashboardLayout: React.FC = () => {
         <div className="p-6 border-b border-gray-200">
           <h1 className="text-xl font-bold text-blue-600">Task Manager</h1>
         </div>
-        
+
         <nav className="flex-1 p-4 overflow-y-auto">
-           <ProjectList />
+          <ProjectList />
         </nav>
 
         <div className="p-4 border-t border-gray-200">
-          <button onClick={handleLogout} className="w-full px-4 py-2 text-sm text-red-600 hover:bg-red-50 rounded-md text-left">
+          <button
+            onClick={handleLogout}
+            className="w-full px-4 py-2 text-sm text-red-600 hover:bg-red-50 rounded-md text-left"
+          >
             Logout
           </button>
         </div>
@@ -34,8 +37,10 @@ const DashboardLayout: React.FC = () => {
       {/* Main Content */}
       <main className="flex-1 overflow-y-auto">
         <header className="bg-white shadow-sm p-4 md:hidden flex justify-between items-center">
-             <h1 className="text-lg font-bold text-blue-600">Task Manager</h1>
-             <button onClick={handleLogout} className="text-sm text-red-600">Logout</button>
+          <h1 className="text-lg font-bold text-blue-600">Task Manager</h1>
+          <button onClick={handleLogout} className="text-sm text-red-600">
+            Logout
+          </button>
         </header>
         <div className="p-8">
           <Outlet />

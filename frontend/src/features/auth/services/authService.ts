@@ -1,15 +1,21 @@
-import api from '../../../lib/axios';
-import type { LoginCredentials, RegisterCredentials, AuthResponse } from '../types';
+import api from "../../../lib/axios";
+import type {
+  LoginCredentials,
+  RegisterCredentials,
+  AuthResponse,
+} from "../types";
 
 export const authService = {
   login: async (credentials: LoginCredentials): Promise<AuthResponse> => {
-    const response = await api.post<AuthResponse>('/auth/login', credentials);
+    const response = await api.post<AuthResponse>("/auth/login", credentials);
     return response.data;
   },
 
   register: async (credentials: RegisterCredentials): Promise<AuthResponse> => {
-    const response = await api.post<AuthResponse>('/auth/register', credentials);
+    const response = await api.post<AuthResponse>(
+      "/auth/register",
+      credentials,
+    );
     return response.data;
   },
 };
-

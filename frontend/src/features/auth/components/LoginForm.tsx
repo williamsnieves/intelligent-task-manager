@@ -1,37 +1,41 @@
-import React, { useState } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
-import { authService } from '../services/authService';
-import { useAuthStore } from '../store/authStore';
+import React, { useState } from "react";
+import { useNavigate, Link } from "react-router-dom";
+import { authService } from "../services/authService";
+import { useAuthStore } from "../store/authStore";
 
 export const LoginForm: React.FC = () => {
   const navigate = useNavigate();
   const login = useAuthStore((state) => state.login);
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [error, setError] = useState('');
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setError('');
+    setError("");
     try {
       const data = await authService.login({ email, password });
       // TODO: Decode token to get user info or fetch profile
       // For MVP, we'll mock the user object or update backend to return it
-      const mockUser = { _id: '1', email, name: 'User' }; 
+      const mockUser = { _id: "1", email, name: "User" };
       login(mockUser, data.access_token);
-      navigate('/dashboard');
+      navigate("/dashboard");
     } catch (err: any) {
-      setError('Invalid email or password');
+      setError("Invalid email or password");
     }
   };
 
   return (
     <div>
       <h2 className="text-2xl font-bold text-center mb-6">Login</h2>
-      {error && <div className="bg-red-100 text-red-700 p-2 rounded mb-4">{error}</div>}
+      {error && (
+        <div className="bg-red-100 text-red-700 p-2 rounded mb-4">{error}</div>
+      )}
       <form onSubmit={handleSubmit} className="space-y-4">
         <div>
-          <label className="block text-sm font-medium text-gray-700">Email</label>
+          <label className="block text-sm font-medium text-gray-700">
+            Email
+          </label>
           <input
             type="email"
             required
@@ -41,7 +45,9 @@ export const LoginForm: React.FC = () => {
           />
         </div>
         <div>
-          <label className="block text-sm font-medium text-gray-700">Password</label>
+          <label className="block text-sm font-medium text-gray-700">
+            Password
+          </label>
           <input
             type="password"
             required
@@ -59,8 +65,11 @@ export const LoginForm: React.FC = () => {
       </form>
       <div className="mt-4 text-center">
         <p className="text-sm text-gray-600">
-          Don't have an account?{' '}
-          <Link to="/register" className="font-medium text-blue-600 hover:text-blue-500">
+          Don't have an account?{" "}
+          <Link
+            to="/register"
+            className="font-medium text-blue-600 hover:text-blue-500"
+          >
             Register
           </Link>
         </p>
@@ -68,4 +77,3 @@ export const LoginForm: React.FC = () => {
     </div>
   );
 };
-

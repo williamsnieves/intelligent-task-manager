@@ -53,4 +53,3 @@ export class Task {
 }
 
 export const TaskSchema = SchemaFactory.createForClass(Task);
-

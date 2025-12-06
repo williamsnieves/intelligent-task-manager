@@ -1,6 +1,9 @@
 import { Module, forwardRef } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
-import { Project, ProjectSchema } from './infrastructure/schemas/project.schema';
+import {
+  Project,
+  ProjectSchema,
+} from './infrastructure/schemas/project.schema';
 import { ProjectsService } from './application/projects.service';
 import { ProjectsController } from './interface/projects.controller';
 import { TasksModule } from '../tasks/tasks.module';
