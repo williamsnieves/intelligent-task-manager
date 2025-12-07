@@ -1,10 +1,10 @@
-version: '3.8'
+version: "3.8"
 
 services:
   mongo:
     image: mongo:6.0
     ports:
-      - '27017:27017'
+      - "27017:27017"
     environment:
       MONGO_INITDB_ROOT_USERNAME: root
       MONGO_INITDB_ROOT_PASSWORD: password123
@@ -22,15 +22,52 @@ services:
       ME_CONFIG_MONGODB_ADMINUSERNAME: root
       ME_CONFIG_MONGODB_ADMINPASSWORD: password123
       ME_CONFIG_MONGODB_URL: mongodb://root:password123@mongo:27017/
-      ME_CONFIG_BASICAUTH: 'false'
+      ME_CONFIG_BASICAUTH: "false"
     networks:
       - taskmanager-net
     depends_on:
       - mongo
 
+  postgres-evolution:
+    image: postgres:15-alpine
+    environment:
+      POSTGRES_PASSWORD: evolution123
+      POSTGRES_DB: evolution
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    networks:
+      - taskmanager-net
+
+  evolution-api:
+    container_name: evolution_api
+    image: atendai/evolution-api:latest
+    restart: always
+    ports:
+      - "8080:8080"
+    volumes:
+      - evolution-data:/evolution/instances
+    environment:
+      - AUTHENTICATION_API_KEY=${EVOLUTION_API_KEY:-4068cdd0ccc0db2342212054c62ab39be883db930d3b11d76edbea30a36a7daf}
+      - DATABASE_ENABLED=true
+      - DATABASE_PROVIDER=postgresql
+      - DATABASE_CONNECTION_URI=postgresql://postgres:evolution123@postgres-evolution:5432/evolution?schema=public
+      - DATABASE_SAVE_DATA_INSTANCE=true
+      - DATABASE_SAVE_DATA_NEW_MESSAGE=true
+      - DATABASE_SAVE_MESSAGE_UPDATE=true
+      - DATABASE_SAVE_DATA_CONTACTS=true
+      - DATABASE_SAVE_DATA_CHATS=true
+      - CACHE_REDIS_ENABLED=false
+      - DEL_INSTANCE=false
+    depends_on:
+      - postgres-evolution
+    networks:
+      - taskmanager-net
+
 volumes:
   mongo-data:
+  postgres-data:
+  evolution-data:
+  evolution-store:
 
 networks:
   taskmanager-net:
-

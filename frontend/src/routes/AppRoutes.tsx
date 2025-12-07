@@ -6,6 +6,7 @@ import { LoginForm } from "../features/auth/components/LoginForm";
 import { RegisterForm } from "../features/auth/components/RegisterForm";
 import { ProtectedRoute } from "../features/auth/components/ProtectedRoute";
 import { TaskList } from "../features/tasks/components/TaskList";
+import { NotificationSettings } from "../features/reminders/components/NotificationSettings";
 
 const AppRoutes: React.FC = () => {
   return (
@@ -33,6 +34,7 @@ const AppRoutes: React.FC = () => {
         <Route element={<ProtectedRoute />}>
           <Route path="/dashboard" element={<DashboardLayout />}>
             <Route index element={<TaskList />} />
+            <Route path="notifications" element={<NotificationSettings />} />
             {/* More nested routes will go here */}
           </Route>
         </Route>

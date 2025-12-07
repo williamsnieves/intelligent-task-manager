@@ -1,5 +1,17 @@
 node_modules
 dist
 .env
+.env.*
 .pnpm-store
+
+# Temporary files
+*.tmp
+*.log
+qr-code.txt
+
+# Evolution API temporary files
+whatsapp-qr.html
+whatsapp-setup.html
+setup-whatsapp.sh
+run-evolution.sh
 

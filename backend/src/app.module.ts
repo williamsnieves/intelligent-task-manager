@@ -9,6 +9,7 @@ import { LabelsModule } from './modules/labels/labels.module';
 import { TasksModule } from './modules/tasks/tasks.module';
 import { AuthModule } from './modules/auth/auth.module';
 import { AiModule } from './modules/ai/ai.module';
+import { RemindersModule } from './modules/reminders/reminders.module';
 
 @Module({
   imports: [
@@ -20,6 +21,7 @@ import { AiModule } from './modules/ai/ai.module';
     TasksModule,
     AuthModule,
     AiModule,
+    RemindersModule,
   ],
   controllers: [AppController],
   providers: [AppService],
