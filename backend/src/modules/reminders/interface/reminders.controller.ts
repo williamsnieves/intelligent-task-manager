@@ -25,6 +25,7 @@ export class RemindersController {
 
   @Get('history')
   async getHistory(@Req() req: Request, @Query('limit') limit?: string) {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
     const userId = (req.user as any).userId as string;
     const limitNum = limit ? parseInt(limit, 10) : 10;
     return this.remindersService.getHistory(userId, limitNum);
@@ -32,6 +33,7 @@ export class RemindersController {
 
   @Post('test')
   async sendTestNotification(@Req() req: Request) {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
     const userId = (req.user as any).userId as string;
     const success = await this.remindersService.sendTestNotification(userId);
     return {
@@ -44,6 +46,7 @@ export class RemindersController {
 
   @Post('trigger')
   async triggerManualCheck(@Req() req: Request) {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
     const userId = (req.user as any).userId as string;
     const count = await this.remindersService.checkRemindersForUser(userId);
     return {
@@ -55,6 +58,7 @@ export class RemindersController {
 
   @Get('preferences')
   async getPreferences(@Req() req: Request) {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
     const userId = (req.user as any).userId as string;
     const user = await this.usersService.findById(userId);
     return {
@@ -67,6 +71,7 @@ export class RemindersController {
 
   @Patch('preferences')
   async updatePreferences(@Req() req: Request, @Body() body: any) {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
     const userId = (req.user as any).userId as string;
     await this.usersService.updateReminderPreferences(userId, body);
     return {

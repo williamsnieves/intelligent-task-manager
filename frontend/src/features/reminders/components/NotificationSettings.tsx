@@ -254,10 +254,10 @@ export const NotificationSettings = () => {
                     reminderPreferences: {
                       ...settings.reminderPreferences,
                       quietHours: {
+                        ...settings.reminderPreferences?.quietHours,
                         start:
                           settings.reminderPreferences?.quietHours?.start ||
                           '22:00',
-                        ...settings.reminderPreferences?.quietHours,
                         end: e.target.value,
                       },
                     },

@@ -47,7 +47,7 @@ export class RemindersService {
       }
 
       // Filter by priority preferences
-      const priorityFilter = (user.reminderPreferences?.priorityFilter as string[]) || [
+      const priorityFilter = user.reminderPreferences?.priorityFilter || [
         'HIGH',
         'URGENT',
       ];
@@ -60,16 +60,22 @@ export class RemindersService {
       }
 
       // AI Analysis
+
       const recommendations = await this.ollamaAnalyzer.analyze(
         filteredTasks.map((t) => {
+          // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
           const taskDoc = t as any; // TaskDocument with Mongoose properties
           return {
+            // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access
             _id: taskDoc._id.toString(),
             title: t.title,
             description: t.description,
+            // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
             priority: t.priority as any,
             dueDate: t.dueDate,
+            // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
             createdAt: taskDoc.createdAt,
+            // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
             updatedAt: taskDoc.updatedAt,
             status: t.status as string,
           };
@@ -92,17 +98,22 @@ export class RemindersService {
       let sentCount = 0;
       for (const recommendation of validRecommendations) {
         const result = await this.whatsappProvider.send({
-          recipient: user.phone as string,
+          recipient: user.phone,
+          // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
           taskTitle: recommendation.taskTitle,
+          // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
           priority: recommendation.priority as string,
+          // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access
           dueDate: recommendation.dueDate?.toLocaleDateString(),
+          // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
           daysPending: recommendation.daysPending,
+          // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
           reasoning: recommendation.reasoning,
           language: user.language || 'es',
         });
 
         // Save reminder history
-        await this.saveReminderHistory(userId, recommendation as any, result as any);
+        await this.saveReminderHistory(userId, recommendation, result as any);
 
         if (result.success) {
           sentCount++;
@@ -125,6 +136,7 @@ export class RemindersService {
   }> {
     const users = await this.usersService.findAll();
     const enabledUsers = users.filter(
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
       (u: any) => u.notificationsEnabled && u.phone,
     );
 
@@ -134,7 +146,6 @@ export class RemindersService {
 
     let totalReminders = 0;
     for (const user of enabledUsers) {
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-argument
       const count = await this.checkRemindersForUser(user._id.toString());
       totalReminders += count;
     }
@@ -146,12 +157,15 @@ export class RemindersService {
   }
 
   async getHistory(userId: string, limit = 10): Promise<Reminder[]> {
-    return this.reminderModel
-      .find({ userId: userId as any })
-      .sort({ sentAt: -1 })
-      .limit(limit)
-      .lean()
-      .exec();
+    return (
+      this.reminderModel
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+        .find({ userId: userId as any })
+        .sort({ sentAt: -1 })
+        .limit(limit)
+        .lean()
+        .exec()
+    );
   }
 
   async sendTestNotification(userId: string): Promise<boolean> {
@@ -177,7 +191,9 @@ export class RemindersService {
     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
     const [endHour, endMinute] = quietHours.end.split(':').map(Number);
 
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
     const startTime = startHour * 60 + startMinute;
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
     const endTime = endHour * 60 + endMinute;
 
     // Handle overnight quiet hours (e.g., 22:00 to 08:00)
@@ -190,12 +206,14 @@ export class RemindersService {
 
   private async filterRecentReminders(
     userId: string,
+
     recommendations: any[],
   ): Promise<any[]> {
     const oneDayAgo = new Date(Date.now() - 24 * 60 * 60 * 1000);
 
     const recentReminders = await this.reminderModel
       .find({
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
         userId: userId as any,
         sentAt: { $gte: oneDayAgo },
         status: 'sent',
@@ -207,6 +225,7 @@ export class RemindersService {
       recentReminders.map((r) => r.taskId.toString()),
     );
 
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-argument
     return recommendations.filter((rec) => !recentTaskIds.has(rec.taskId));
   }
 
@@ -216,7 +235,6 @@ export class RemindersService {
     result: any,
   ): Promise<void> {
     try {
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
       await this.reminderModel.create({
         userId,
         // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access

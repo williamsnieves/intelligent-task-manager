@@ -180,7 +180,7 @@ Respond ONLY with valid JSON:
           } as ReminderRecommendation;
         })
         .filter((r): r is ReminderRecommendation => r !== null);
-      
+
       return recommendations;
     } catch (error) {
       this.logger.error('Failed to parse Ollama response', error);
@@ -222,7 +222,8 @@ Respond ONLY with valid JSON:
       }
       // Check by priority and days pending
       else if (
-        ((task.priority as string) === 'HIGH' || (task.priority as string) === 'URGENT') &&
+        ((task.priority as string) === 'HIGH' ||
+          (task.priority as string) === 'URGENT') &&
         daysPending > 1
       ) {
         needsReminder = true;
