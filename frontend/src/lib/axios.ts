@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const api = axios.create({
-  baseURL: import.meta.env.VITE_API_URL || "http://localhost:3000",
+  baseURL: import.meta.env.VITE_API_URL || "http://localhost:3001",
   headers: {
     "Content-Type": "application/json",
   },
@@ -16,7 +16,7 @@ api.interceptors.request.use(
     }
     return config;
   },
-  (error) => Promise.reject(error),
+  (error) => Promise.reject(error)
 );
 
 // Response Interceptor: Handle 401
@@ -28,7 +28,7 @@ api.interceptors.response.use(
       window.location.href = "/login";
     }
     return Promise.reject(error);
-  },
+  }
 );
 
 export default api;

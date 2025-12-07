@@ -24,4 +24,36 @@ export class UsersService {
   async findByEmail(email: string): Promise<UserDocument | null> {
     return this.userModel.findOne({ email }).exec();
   }
+
+  async findById(userId: string): Promise<UserDocument | null> {
+    return this.userModel.findById(userId as any).exec();
+  }
+
+  async findAll(): Promise<UserDocument[]> {
+    return this.userModel.find().exec();
+  }
+
+  async updateReminderPreferences(
+    userId: string,
+    preferences: any,
+  ): Promise<UserDocument | null> {
+    return this.userModel
+      .findByIdAndUpdate(
+        userId as any,
+        {
+          $set: {
+            // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+            notificationsEnabled: preferences.notificationsEnabled,
+            // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+            phone: preferences.phone,
+            // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+            language: preferences.language,
+            // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+            reminderPreferences: preferences.reminderPreferences,
+          },
+        },
+        { new: true },
+      )
+      .exec();
+  }
 }
