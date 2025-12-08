@@ -1,0 +1,104 @@
+name: Deploy to AWS ECS
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+env:
+  AWS_REGION: us-east-1
+  ECR_BACKEND_REPOSITORY: intelligent-task-manager-dev-backend
+  ECR_FRONTEND_REPOSITORY: intelligent-task-manager-dev-frontend
+  ECS_CLUSTER: intelligent-task-manager-dev-cluster
+  ECS_BACKEND_SERVICE: intelligent-task-manager-dev-backend-service
+  ECS_FRONTEND_SERVICE: intelligent-task-manager-dev-frontend-service
+
+jobs:
+  build-and-deploy:
+    name: Build and Deploy
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Login to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v2
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Build and push Backend image
+        env:
+          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+          IMAGE_TAG: ${{ github.sha }}
+        run: |
+          cd backend
+          docker build \
+            --cache-from $ECR_REGISTRY/$ECR_BACKEND_REPOSITORY:latest \
+            --tag $ECR_REGISTRY/$ECR_BACKEND_REPOSITORY:$IMAGE_TAG \
+            --tag $ECR_REGISTRY/$ECR_BACKEND_REPOSITORY:latest \
+            .
+          docker push $ECR_REGISTRY/$ECR_BACKEND_REPOSITORY:$IMAGE_TAG
+          docker push $ECR_REGISTRY/$ECR_BACKEND_REPOSITORY:latest
+
+      - name: Build and push Frontend image
+        env:
+          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+          IMAGE_TAG: ${{ github.sha }}
+          VITE_API_URL: ${{ secrets.VITE_API_URL }}
+        run: |
+          cd frontend
+          docker build \
+            --build-arg VITE_API_URL=$VITE_API_URL \
+            --cache-from $ECR_REGISTRY/$ECR_FRONTEND_REPOSITORY:latest \
+            --tag $ECR_REGISTRY/$ECR_FRONTEND_REPOSITORY:$IMAGE_TAG \
+            --tag $ECR_REGISTRY/$ECR_FRONTEND_REPOSITORY:latest \
+            .
+          docker push $ECR_REGISTRY/$ECR_FRONTEND_REPOSITORY:$IMAGE_TAG
+          docker push $ECR_REGISTRY/$ECR_FRONTEND_REPOSITORY:latest
+
+      - name: Update Backend ECS service
+        run: |
+          aws ecs update-service \
+            --cluster $ECS_CLUSTER \
+            --service $ECS_BACKEND_SERVICE \
+            --force-new-deployment \
+            --region $AWS_REGION
+
+      - name: Update Frontend ECS service
+        run: |
+          aws ecs update-service \
+            --cluster $ECS_CLUSTER \
+            --service $ECS_FRONTEND_SERVICE \
+            --force-new-deployment \
+            --region $AWS_REGION
+
+      - name: Wait for Backend service stability
+        run: |
+          aws ecs wait services-stable \
+            --cluster $ECS_CLUSTER \
+            --services $ECS_BACKEND_SERVICE \
+            --region $AWS_REGION
+
+      - name: Wait for Frontend service stability
+        run: |
+          aws ecs wait services-stable \
+            --cluster $ECS_CLUSTER \
+            --services $ECS_FRONTEND_SERVICE \
+            --region $AWS_REGION
+
+      - name: Deployment summary
+        run: |
+          echo "✅ Deployment completed successfully!"
+          echo "Backend image: ${{ steps.login-ecr.outputs.registry }}/$ECR_BACKEND_REPOSITORY:${{ github.sha }}"
+          echo "Frontend image: ${{ steps.login-ecr.outputs.registry }}/$ECR_FRONTEND_REPOSITORY:${{ github.sha }}"

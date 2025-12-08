@@ -1,0 +1,40 @@
+# ================================
+# Development Environment Variables
+# Copy this file to terraform.tfvars and fill in your values
+# ================================
+
+aws_region   = "us-east-1"
+project_name = "intelligent-task-manager"
+environment  = "dev"
+vpc_cidr     = "10.0.0.0/16"
+
+# Database credentials (NOT USED if using MongoDB Atlas)
+# Keep these as placeholders
+db_username = "PLACEHOLDER_DB_USER"
+db_password = "PLACEHOLDER_DB_PASSWORD"
+
+# Application secrets
+jwt_secret = "PLACEHOLDER_JWT_SECRET_CHANGE_THIS"  # Change this!
+
+# WhatsApp configuration (optional - can be empty for now)
+whatsapp_api_url     = ""
+whatsapp_api_key     = ""
+whatsapp_instance_id = "task-manager"
+
+# Ollama configuration (optional - can be empty for now)
+ollama_api_url = ""
+
+# ECS configuration (Free tier eligible)
+backend_cpu      = 256  # 0.25 vCPU
+backend_memory   = 512  # 512 MB
+frontend_cpu     = 256  # 0.25 vCPU
+frontend_memory  = 512  # 512 MB
+desired_count    = 1    # Number of tasks
+
+# ================================
+# IMPORTANT: Use MongoDB Atlas Free Tier
+# ================================
+# 1. Create account at https://www.mongodb.com/cloud/atlas/register
+# 2. Create a free M0 cluster
+# 3. Add your connection string to backend environment variables
+# 4. Comment out the RDS module in main.tf to avoid DocumentDB costs
